@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>yourplay — Just play.</title>
+<meta name="description" content="Just play. Your highlights are on your phone before you leave the turf.">
+<meta property="og:title" content="yourplay — Just play.">
+<meta property="og:description" content="Your highlights are on your phone before you leave the turf.">
+<meta property="og:image" content="https://yourplay.in/assets/icon-512.png">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0a0b0d" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{ /* light (default) */
+    --ink:#ffffff; --ink-2:#f5f6f2; --ink-3:#ecede7; --line:#e1e3dc;
+    --text:#0a0b0d; --muted:#5f656d; --soft:#363b41; --field:#ffffff;
+    --lime:#c6f432; --accent:#5b8a00; --red:#ff3b30;
+    --glow:rgba(150,200,20,.16); --deco:#0a0b0d; --try-end:#f1f6e3;
+    --ok-bg:rgba(91,138,0,.10); --ok-line:rgba(91,138,0,.35);
+    color-scheme:light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --ink:#0a0b0d; --ink-2:#121418; --ink-3:#1b1e23; --line:#262a30;
+      --text:#f5f6f2; --muted:#9aa0a8; --soft:#cfd3d8; --field:#0c0e11;
+      --accent:#c6f432;
+      --glow:rgba(198,244,50,.10); --deco:#f5f6f2; --try-end:#0e1108;
+      --ok-bg:rgba(198,244,50,.12); --ok-line:rgba(198,244,50,.3);
+      color-scheme:dark;
+    }
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--ink);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+       -webkit-font-smoothing:antialiased;line-height:1.5}
+  a{color:inherit}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+
+  /* ---------- hero ---------- */
+  .hero{min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+        text-align:center;position:relative;overflow:hidden;padding:48px 24px 96px}
+  .hero::before{ /* faint goal + pitch lines */
+    content:"";position:absolute;inset:0;pointer-events:none;opacity:.07;
+    background:radial-gradient(ellipse 360px 120px at 50% 100%, transparent 98%, var(--deco) 99%, transparent 100%);
+  }
+  .hero::after{
+    content:"";position:absolute;width:900px;height:900px;left:50%;top:38%;transform:translate(-50%,-50%);
+    background:radial-gradient(circle, var(--glow), transparent 60%);pointer-events:none}
+  .hero img.logo{width:min(560px,82vw);height:auto;position:relative;z-index:1}
+  .hero h1{font-size:clamp(56px,11vw,128px);font-weight:900;letter-spacing:-.045em;line-height:.95;
+           margin-top:clamp(36px,6vw,64px);position:relative;z-index:1}
+  .hero h1 span{color:var(--accent)}
+  .hero p.lead{font-size:clamp(18px,2.4vw,24px);color:var(--soft);max-width:620px;margin-top:22px;font-weight:500;
+               position:relative;z-index:1}
+  .cta{display:inline-flex;align-items:center;gap:10px;margin-top:36px;padding:16px 26px;border-radius:999px;
+       background:var(--lime);color:#0a0b0d;font-weight:800;font-size:17px;text-decoration:none;position:relative;z-index:1;
+       transition:transform .15s ease, box-shadow .15s ease}
+  .cta:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(198,244,50,.25)}
+  .scroll{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);color:var(--muted);font-size:13px;
+          letter-spacing:.14em;text-transform:uppercase;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:8px}
+  .scroll i{width:2px;height:28px;background:linear-gradient(var(--lime),transparent);display:block;animation:drip 1.8s ease-in-out infinite}
+  @keyframes drip{0%{transform:scaleY(.2);transform-origin:top;opacity:0}40%{opacity:1}100%{transform:scaleY(1);opacity:0}}
+
+  /* ---------- how it works ---------- */
+  section{padding:110px 0}
+  .eyebrow{color:var(--accent);font-weight:800;font-size:13px;letter-spacing:.16em;text-transform:uppercase}
+  h2{font-size:clamp(34px,5.4vw,56px);font-weight:900;letter-spacing:-.035em;line-height:1.02;margin-top:14px}
+  .how-head{max-width:640px}
+  .tracks{display:grid;grid-template-columns:1.35fr 1fr;gap:22px;margin-top:56px}
+  .card{background:var(--ink-2);border:1px solid var(--line);border-radius:28px;padding:34px}
+  .card h3{font-size:24px;font-weight:800;letter-spacing:-.02em}
+  .card h3 em{font-style:normal;color:var(--accent)}
+  .tag{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+       border:1px solid var(--line);border-radius:999px;padding:6px 12px;margin-bottom:18px}
+  .steps{list-style:none;margin-top:26px;display:grid;gap:14px}
+  .step{display:grid;grid-template-columns:56px 1fr;gap:16px;align-items:start;padding:18px;border-radius:20px;background:var(--ink-3)}
+  .ico{color:var(--accent);width:56px;height:56px;border-radius:16px;background:var(--ink);border:1px solid var(--line);display:grid;place-items:center}
+  .ico svg{width:30px;height:30px}
+  .step b{display:block;font-size:18px;font-weight:800;letter-spacing:-.01em}
+  .step span{display:block;color:var(--muted);font-size:15.5px;margin-top:4px}
+  .num{font-variant-numeric:tabular-nums;color:var(--accent);font-weight:800;margin-right:8px}
+  .turf .big{font-size:clamp(28px,3.4vw,36px);font-weight:900;letter-spacing:-.03em;line-height:1.08;margin-top:22px}
+  .turf .big span{color:var(--accent)}
+  .turf ul{list-style:none;margin-top:24px;display:grid;gap:12px}
+  .turf li{display:flex;gap:12px;color:var(--soft);font-size:16px}
+  .turf li::before{content:"";flex:0 0 10px;height:10px;border-radius:50%;margin-top:8px;background:var(--accent)}
+
+  /* ---------- form ---------- */
+  .try{background:linear-gradient(180deg,var(--ink) 0%,var(--try-end) 100%);border-top:1px solid var(--line)}
+  .try-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+  .try p.sub{color:var(--soft);font-size:18px;margin-top:18px;max-width:440px}
+  form{background:var(--ink-2);border:1px solid var(--line);border-radius:28px;padding:32px;display:grid;gap:16px}
+  label{display:grid;gap:8px;font-size:14px;font-weight:600;color:var(--soft)}
+  input{font:inherit;font-size:17px;color:var(--text);background:var(--field);border:1px solid var(--line);border-radius:14px;
+        padding:15px 16px;outline:none;transition:border-color .15s}
+  input::placeholder{color:#8a9098}
+  input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--glow)}
+  button{font:inherit;font-weight:800;font-size:17px;border:0;border-radius:999px;padding:17px 22px;background:var(--lime);
+         color:#0a0b0d;cursor:pointer;margin-top:6px;transition:transform .15s}
+  button:hover{transform:translateY(-1px)}
+  button[disabled]{opacity:.6;cursor:wait}
+  .fine{color:var(--muted);font-size:13px;text-align:center}
+  .msg{display:none;padding:14px 16px;border-radius:14px;font-weight:600;font-size:15px}
+  .msg.ok{display:block;background:var(--ok-bg);color:var(--accent);border:1px solid var(--ok-line)}
+  .msg.err{display:block;background:rgba(255,59,48,.1);color:#d63a2f;border:1px solid rgba(255,59,48,.3)}
+
+  footer{padding:40px 0 56px;border-top:1px solid var(--line)}
+  footer .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  footer img{width:120px;display:block;height:auto;opacity:.9}
+  footer small{color:var(--muted);font-size:13px}
+
+  @media (prefers-color-scheme: dark){.msg.err{color:#ff8a82}}
+  @media (max-width:860px){
+    .tracks,.try-grid{grid-template-columns:1fr}
+    section{padding:84px 0}
+    .card,form{padding:24px;border-radius:24px}
+    .step{grid-template-columns:48px 1fr;padding:14px}
+    .ico{width:48px;height:48px;border-radius:14px}
+    .ico svg{width:26px;height:26px}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <picture>
+    <source srcset="assets/logo-dark.png" media="(prefers-color-scheme: dark)">
+    <img class="logo" src="assets/logo-light.png" alt="yourplay" width="1093" height="242">
+  </picture>
+  <h1>Just play<span>.</span></h1>
+  <p class="lead">Your highlights are on your phone before you leave the turf.</p>
+  <a class="cta" href="#try">Try it free for a game</a>
+  <a class="scroll" href="#how">How it works<i></i></a>
+</header>
+
+<main>
+  <section id="how">
+    <div class="wrap">
+      <div class="how-head">
+        <div class="eyebrow">How it works</div>
+        <h2>You play. We take care of the rest.</h2>
+      </div>
+
+      <div class="tracks">
+        <!-- players -->
+        <div class="card">
+          <div class="tag">For players</div>
+          <h3>Just <em>play.</em></h3>
+          <ol class="steps">
+            <li class="step">
+              <div class="ico" aria-hidden="true">
+                <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 22h18l6-3v-3l-8-2-4-8H8l-2 6-2 1v9z"/><path d="M10 9l2 2M12 7.5l2 2"/><path d="M4 25h24"/>
+                </svg>
+              </div>
+              <div><b><span class="num">01</span>Lace up and play</b>
+                <span>No one has to film. No phone balanced on a water bottle.</span></div>
+            </li>
+            <li class="step">
+              <div class="ico" aria-hidden="true">
+                <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 27V7h24v20"/><rect x="13" y="7" width="6" height="5" rx="1.2" fill="currentColor" stroke="none"/>
+                  <circle cx="16" cy="9.5" r="1.3" style="fill:var(--ink)" stroke="none"/><path d="M8 12l3 3M24 12l-3 3" opacity=".45"/>
+                </svg>
+              </div>
+              <div><b><span class="num">02</span>Our camera sits on the crossbar</b>
+                <span>A small yourplay cam watches the game for you, every goal, every save.</span></div>
+            </li>
+            <li class="step">
+              <div class="ico" aria-hidden="true">
+                <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="9" y="3" width="14" height="26" rx="3"/><path d="M14 13.5v6l5-3z" fill="currentColor"/>
+                  <path d="M13 6.5h6"/>
+                </svg>
+              </div>
+              <div><b><span class="num">03</span>Final whistle, highlights ready</b>
+                <span>Connect to the yourplay cam’s Wi-Fi and all your videos are there to download and share, right away.</span></div>
+            </li>
+          </ol>
+        </div>
+
+        <!-- turfs -->
+        <div class="card turf">
+          <div class="tag">For turfs</div>
+          <h3>Run a turf?</h3>
+          <p class="big">Let the cam sit on your crossbar. <span>Enjoy more bookings.</span></p>
+          <ul>
+            <li>Nothing for your staff to run. The camera does the work.</li>
+            <li>Players leave with highlights of their game, and come back for more.</li>
+            <li>Every shared clip shows off your turf.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="try" id="try">
+    <div class="wrap try-grid">
+      <div>
+        <div class="eyebrow">Free trial</div>
+        <h2>Want to try it free for a game?</h2>
+        <p class="sub">Leave your details. We’ll bring a yourplay cam to your next match.</p>
+      </div>
+
+      <form id="trial" novalidate>
+        <label>Name
+          <input name="name" autocomplete="name" placeholder="Your name" required>
+        </label>
+        <label>Phone or email
+          <input name="contact" autocomplete="email" placeholder="98765 43210 or you@email.com" required>
+        </label>
+        <!-- spam trap: real people never fill this -->
+        <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
+        <button type="submit">Book my free game</button>
+        <div class="msg" id="msg" role="status" aria-live="polite"></div>
+        <p class="fine">We’ll only use this to set up your game.</p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <picture>
+      <source srcset="assets/logo-dark.png" media="(prefers-color-scheme: dark)">
+      <img src="assets/logo-light.png" alt="yourplay" width="1093" height="242">
+    </picture>
+    <small>© 2026 yourplay · Bengaluru</small>
+  </div>
+</footer>
+
+<script>
+  // Paste your form endpoint here (e.g. https://formspree.io/f/xxxxxxx).
+  const FORM_ENDPOINT = "https://formspree.io/f/mvkzwqro";
+
+  const form = document.getElementById("trial");
+  const msg = document.getElementById("msg");
+  const btn = form.querySelector("button");
+
+  function show(kind, text){ msg.className = "msg " + kind; msg.textContent = text; }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const name = form.name.value.trim();
+    const contact = form.contact.value.trim();
+    const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact);
+    const isPhone = /^\+?[\d\s-]{10,15}$/.test(contact);
+    if (!name) return show("err", "Please add your name.");
+    if (!isEmail && !isPhone) return show("err", "Please add a valid phone number or email.");
+    if (!FORM_ENDPOINT) return show("err", "Sign-ups aren’t switched on yet. Please check back soon.");
+    btn.disabled = true; btn.textContent = "Sending…";
+    try {
+      const res = await fetch(FORM_ENDPOINT, {
+        method: "POST",
+        headers: { "Accept": "application/json", "Content-Type": "application/json" },
+        body: JSON.stringify({ name, contact, _gotcha: form._gotcha.value })
+      });
+      if (!res.ok) throw new Error(res.status);
+      form.reset();
+      show("ok", "You’re in! We’ll reach out to set up your free game.");
+      btn.textContent = "Booked ✓";
+    } catch (err) {
+      show("err", "Something went wrong. Please try again.");
+      btn.disabled = false; btn.textContent = "Book my free game";
+    }
+  });
+</script>
+</body>
+</html>
